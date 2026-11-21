@@ -40,7 +40,8 @@ def details(dataset_id: int, offset: int = Query(0, ge=0), limit: int = Query(16
     item = db.get(Dataset, dataset_id)
     if not item:
         raise HTTPException(404, '找不到该数据批次')
-    return {**views.dataset(item), 'rows': item.rows[offset:offset + limit]}
+    provenance = any('source_factory' in row or 'source_order_no' in row for row in item.rows)
+    return {**views.dataset(item), 'rows': item.rows[offset:offset + limit], 'provenance': provenance}
 
 
 @router.post('/datasets', status_code=201)

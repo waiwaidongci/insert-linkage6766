@@ -32,3 +32,6 @@ venv/
 target/
 *.o
 *.obj
+
+# 测试本地数据库
+**/tests/*.db

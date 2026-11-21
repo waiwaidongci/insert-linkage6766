@@ -13,13 +13,20 @@ export async function inputs(route, refresh) {
   const error = feedback();
   const sample = button('下载示例 CSV', {class:'quiet',onClick:event=>handler(sample,error,()=>workspace.download('/template',spec.sample_name))(event)});
   const detail = selected && await workspace.getDataset(selected.id,route.offset);
+  const provenance = detail && detail.provenance;
+  const factoryLabel = key => spec.factories?.find(item => item.key === key)?.label || key;
   const columns = spec.fields.map(field => ({key:field.key,label:field.label}));
+  if (provenance) {
+    columns.push({key:'source_factory',label:'来源厂',render:row=>row.source_factory ? factoryLabel(row.source_factory) : '初始台账'},
+      {key:'source_order_no',label:'变更单号',render:row=>row.source_order_no ?? '—'});
+  }
   const preview = detail ? panel('批次明细', el('div',{class:'actions'},
     el('label',{for:'dataset-id',class:'sr'}, '选择数据批次'),
     el('select',{id:'dataset-id','aria-label':'选择数据批次',onChange:event=>{location.hash=`#inputs/${event.target.value}`;}},
       datasets.map(item=>el('option',{value:item.id,selected:item.id === selected.id}, item.name))),
     link('使用此批次运行',`#run/${detail.id}`,{class:'quiet'})),
     p(`${detail.filename} · ${detail.row_count} 行 · ${date(detail.created_at)}`,'filename'),
+    provenance && p('本批次由两厂交割切换生成，每行生效规格标注来源厂与变更单号；初始台账行来自导入的 CSV。','subtle'),
     table(columns,detail.rows,{caption:'批次明细',pageSize:16}),
     el('div',{class:'pagination'},
       route.offset > 0 && link('上一批明细',`#inputs/${detail.id}/${Math.max(0,route.offset-16)}`,{class:'quiet'}),

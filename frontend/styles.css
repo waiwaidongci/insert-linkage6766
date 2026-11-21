@@ -73,6 +73,9 @@ h2 + .metrics { margin-top:.8rem; }
 .activity p { flex-basis:100%; }
 .pill { display:inline-block; padding:.23rem .55rem; font-size:.84rem; font-weight:700; background:var(--accent-soft); color:var(--ink); border:1px solid var(--line); }
 .pill:is([data-state="failed"],[data-state="returned"],[data-state="blocked"]) { border-color:oklch(58% .16 29); }
+.pill:is([data-state="held"],[data-state="collecting"],[data-state="switching"]) { border-color:oklch(62% .13 75); }
+.pill:is([data-state="ready"],[data-state="applied"],[data-state="published"]) { border-color:oklch(55% .12 147); }
+.pill[data-state="void"] { opacity:.62; }
 .table-wrap { overflow:auto; }
 table { width:100%; border-collapse:collapse; border-spacing:0; font-size:.9rem; font-variant-numeric:tabular-nums; }
 :where(th,td) { padding:.58rem .6rem; text-align:left; border-bottom:1px solid var(--line); max-width:24rem; overflow-wrap:anywhere; }

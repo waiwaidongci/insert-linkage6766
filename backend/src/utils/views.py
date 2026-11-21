@@ -27,3 +27,28 @@ def schedule(item):
 def delivery(item):
     return {'id': item.id, 'run_id': item.run_id, 'recipient': item.recipient,
             'state': item.state, 'detail': item.detail, 'created_at': iso(item.created_at)}
+
+
+def change_order(item, conflict=False):
+    return {'id': item.id, 'factory': item.factory, 'order_no': item.order_no,
+            'action': item.action, 'spec_id': item.spec_id, 'name': item.name,
+            'fit_traits': item.fit_traits, 'state': item.state, 'ruled': item.ruled,
+            'conflict': conflict, 'author': item.author, 'created_at': iso(item.created_at)}
+
+
+def notice(item, conflict=False, cycle_id=None):
+    return {'id': item.id, 'factory': item.factory, 'delivery_no': item.delivery_no,
+            'covers_through': item.covers_through, 'state': item.state, 'ruled': item.ruled,
+            'conflict': conflict, 'cycle_id': cycle_id, 'author': item.author,
+            'created_at': iso(item.created_at)}
+
+
+def cycle(item, notices, issues, current_dataset_id):
+    return {'id': item.id, 'state': item.state, 'detail': item.detail, 'attempt': item.attempt,
+            'dataset_id': item.dataset_id, 'base_dataset_id': item.base_dataset_id,
+            'is_current': bool(item.dataset_id) and item.dataset_id == current_dataset_id,
+            'issues': issues,
+            'covers': {factory: {'delivery_no': notice.delivery_no,
+                                 'covers_through': notice.covers_through}
+                       for factory, notice in notices.items()},
+            'created_at': iso(item.created_at), 'published_at': iso(item.published_at)}

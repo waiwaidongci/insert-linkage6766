@@ -18,5 +18,11 @@ export const workspace = {
   deliveries: () => call('/deliveries'),
   schedule: data => call('/schedules', data),
   disable: id => call(`/schedules/${id}/disable`, {}),
+  settlementBoard: () => call('/settlement/board'),
+  submitOrder: data => call('/settlement/orders', data),
+  ruleOrder: data => call('/settlement/orders/rulings', data),
+  submitNotice: data => call('/settlement/notices', data),
+  ruleNotice: data => call('/settlement/notices/rulings', data),
+  retryCycle: id => call(`/settlement/cycles/${id}/retry`, {}),
   download: (path, filename) => saveFile(path, session.token, filename),
 };
